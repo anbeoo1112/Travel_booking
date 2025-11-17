@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\DatTour;
 use App\Models\Payment;
 use App\Models\HoaDonDatTour;
@@ -15,7 +16,10 @@ use Illuminate\Support\Facades\Notification;
 class PaymentController extends Controller
 {
     /**
-     * Tạo yêu cầu thanh toán mới tới Momo.
+     * Tạo yêu cầu thanh toán mới tới Momo
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function createMomoPayment(Request $request)
     {
@@ -61,7 +65,10 @@ class PaymentController extends Controller
     }
 
     /**
-     * Xử lý URL trả về từ Momo.
+     * Xử lý URL trả về từ Momo
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function momoReturn(Request $request)
     {
@@ -151,7 +158,7 @@ class PaymentController extends Controller
                                         'invoice_id' => $hoaDon->id,
                                         'booking_id' => $booking->id,
                                     ]);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('MoMo Return: Failed to create invoice', [
                                         'booking_id' => $booking->id,
                                         'error' => $e->getMessage(),
@@ -165,7 +172,7 @@ class PaymentController extends Controller
                                 Log::info('MoMo Return: SendInvoiceJob dispatched', [
                                     'booking_id' => $booking->id,
                                 ]);
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 Log::error('MoMo Return: Failed to dispatch SendInvoiceJob', [
                                     'booking_id' => $booking->id,
                                     'error' => $e->getMessage(),
@@ -184,7 +191,7 @@ class PaymentController extends Controller
                                         'admin_email' => $adminEmail,
                                     ]);
                                 }
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 Log::error('MoMo Return: Failed to send admin notification', [
                                     'booking_id' => $booking->id,
                                     'error' => $e->getMessage(),
@@ -192,7 +199,7 @@ class PaymentController extends Controller
                             }
                         }
                     });
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Log::error('MoMo Return: Transaction failed', [
                         'orderId' => $orderId,
                         'error' => $e->getMessage(),
@@ -210,7 +217,10 @@ class PaymentController extends Controller
     }
 
     /**
-     * Xử lý thông báo IPN từ Momo.
+     * Xử lý thông báo IPN từ Momo
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function momoNotify(Request $request)
     {
@@ -289,7 +299,7 @@ class PaymentController extends Controller
                                         'invoice_id' => $hoaDon->id,
                                         'booking_id' => $booking->id,
                                     ]);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('MoMo IPN: Failed to create invoice', [
                                         'booking_id' => $booking->id,
                                         'error' => $e->getMessage(),
@@ -303,7 +313,7 @@ class PaymentController extends Controller
                                 Log::info('MoMo IPN: SendInvoiceJob dispatched', [
                                     'booking_id' => $booking->id,
                                 ]);
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 Log::error('MoMo IPN: Failed to dispatch SendInvoiceJob', [
                                     'booking_id' => $booking->id,
                                     'error' => $e->getMessage(),
@@ -322,7 +332,7 @@ class PaymentController extends Controller
                                         'admin_email' => $adminEmail,
                                     ]);
                                 }
-                            } catch (\Exception $e) {
+                            } catch (Exception $e) {
                                 Log::error('MoMo IPN: Failed to send admin notification', [
                                     'booking_id' => $booking->id,
                                     'error' => $e->getMessage(),
@@ -335,7 +345,7 @@ class PaymentController extends Controller
                         ]);
                     }
                 });
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error('MoMo IPN: Transaction failed', [
                     'orderId' => $orderId,
                     'error' => $e->getMessage(),

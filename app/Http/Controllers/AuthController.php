@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\NguoiDung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
+use Illuminate\Database\QueryException;
 
 class AuthController extends Controller
 {
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication
+    |--------------------------------------------------------------------------
+    */
+
     public function showLoginForm()
     {
         return view('login-register');
@@ -34,18 +41,7 @@ class AuthController extends Controller
                 'email' => 'required|string|email|max:50|unique:nguoi_dung,email|regex:/^[A-Za-z0-9._%+-]+@gmail\.com$/',
             ]);
 
-            $lastUser = NguoiDung::selectRaw("CAST(SUBSTRING(id, 4) AS UNSIGNED) as so_nguoi, id")
-                ->where('id', 'like', 'KH-%')
-                ->orderBy('so_nguoi', 'desc')
-                ->first();
-
-            if ($lastUser) {
-                $nextNumber = ($lastUser->so_nguoi + 1);
-                $length = max(3, strlen((string) $nextNumber));
-                $newId = 'KH-' . str_pad($nextNumber, $length, '0', STR_PAD_LEFT);
-            } else {
-                $newId = 'KH-001';
-            }
+            $newId = $this->generateCustomerId();
 
             NguoiDung::create([
                 'id' => $newId,
@@ -64,26 +60,8 @@ class AuthController extends Controller
                 return back()->with('error', 'Tài khoản, số điện thoại hoặc Email đã tồn tại!');
             }
             return back()->with('error', 'Lỗi cơ sở dữ liệu, vui lòng thử lại!');
-        } catch (\Exception $e) {
-            $msg = $e->getMessage();
-
-            if (Str::contains($msg, 'The email has already been taken.')) {
-                $msg = 'Email đã được sử dụng, vui lòng chọn email khác.';
-            } elseif (Str::contains($msg, 'The email field format is invalid')) {
-                $msg = 'Email của bạn không hợp lệ.';
-            } elseif (Str::contains($msg, 'The so dien thoai field must be at least 10 characters')) {
-                $msg = 'Số điện thoại phải có ít nhất 10 số.';
-            } elseif (Str::contains($msg, 'The so dien thoai field must not be greater than 10 characters')) {
-                $msg = 'Số điện thoại không được dài quá 10 số.';
-            } elseif (Str::contains($msg, 'The mat khau field must be at least 8 characters')) {
-                $msg = 'Mật khẩu của bạn phải có ít nhất 8 ký tự.';
-            } elseif (Str::contains($msg, 'The mat khau field must not be greater than 20 characters')) {
-                $msg = 'Mật khẩu của bạn không được vượt quá 20 ký tự.';
-            } else {
-                $msg = 'Có lỗi xảy ra, vui lòng thử lại!';
-            }
-
-            return back()->with('error', $msg);
+        } catch (Exception $e) {
+            return back()->with('error', $this->getValidationErrorMessage($e->getMessage()));
         }
     }
 
@@ -96,32 +74,12 @@ class AuthController extends Controller
 
         $user = NguoiDung::where('tai_khoan', $request->tai_khoan)->first();
 
-        if ($user) {
-            try {
-                $decryptedPassword = Crypt::decrypt($user->mat_khau);
-
-                if ($request->mat_khau === $decryptedPassword) {
-                    Auth::login($user);
-                    if (
-                        $user->vai_tro === 'admin' || $user->vai_tro === 'Nhân Viên Quản Lý Website'
-                        || $user->vai_tro === 'Nhân Viên Chăm Sóc Khách Hàng'
-                        || $user->vai_tro === 'Nhân Viên Thống Kê'
-                    ) {
-                        return redirect()->route('bangdieukhien');
-                    } else if ($user->vai_tro === 'Khách Hàng') {
-                        return redirect()->route('homepage');
-                    }
-                }
-            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-                return back()->withErrors([
-                    'tai_khoan' => 'Tài khoản hoặc mật khẩu không chính xác.',
-                ]);
-            }
+        if (!$user || !$this->verifyPassword($user, $request->mat_khau)) {
+            return back()->withErrors(['tai_khoan' => 'Tài khoản hoặc mật khẩu không chính xác.']);
         }
 
-        return back()->withErrors([
-            'tai_khoan' => 'Tài khoản hoặc mật khẩu không chính xác.',
-        ]);
+        Auth::login($user);
+        return $this->redirectAfterLogin($user);
     }
 
     public function logout(Request $request)
@@ -129,6 +87,18 @@ class AuthController extends Controller
         Auth::logout();
         return redirect()->route('login')->with('success', 'Đăng xuất thành công!');
     }
+
+    public function logoutUser(Request $request)
+    {
+        Auth::logout();
+        return redirect()->route('homepage')->with('success', 'Đăng xuất thành công!');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Profile Management
+    |--------------------------------------------------------------------------
+    */
 
     public function showProfile()
     {
@@ -144,27 +114,7 @@ class AuthController extends Controller
 
     public function update(Request $request)
     {
-        $request->validate([
-            'ho_ten' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'so_dien_thoai' => 'nullable|string|max:15',
-        ]);
-
-        $user = Auth::user();
-        $user->ho_ten = $request->ho_ten;
-        $user->email = $request->email;
-        $user->so_dien_thoai = $request->so_dien_thoai;
-
-        if ($request->hasFile('avatar')) {
-            if ($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $avatarPath;
-        }
-
-        $user->save();
-
+        $this->updateProfile($request);
         return redirect()->route('thong_tin_ca_nhan')->with('success', 'Cập nhật thông tin thành công!');
     }
 
@@ -173,41 +123,22 @@ class AuthController extends Controller
         return view('auth.doi_mat_khau');
     }
 
-    // ✅ Sửa đầy đủ validate đổi mật khẩu (ADMIN)
     public function changePassword(Request $request)
     {
-        $request->validate([
-            'mat_khau_cu' => 'required|string',
-            'mat_khau_moi' => 'required|string|min:8|max:20|confirmed',
-        ]);
+        $result = $this->handlePasswordChange($request);
 
-        $user = Auth::user();
-
-        try {
-            $currentPassword = Crypt::decrypt($user->mat_khau);
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-            return back()->withErrors(['mat_khau_cu' => 'Không thể xác thực mật khẩu hiện tại.']);
+        if ($result !== true) {
+            return back()->withErrors($result);
         }
-
-        if ($request->mat_khau_cu !== $currentPassword) {
-            return back()->withErrors(['mat_khau_cu' => 'Mật khẩu cũ không chính xác.']);
-        }
-
-        if ($request->mat_khau_moi === $currentPassword) {
-            return back()->withErrors(['mat_khau_moi' => 'Mật khẩu mới không được trùng với mật khẩu cũ.']);
-        }
-
-        $user->mat_khau = Crypt::encrypt($request->mat_khau_moi);
-        $user->save();
 
         return redirect()->route('thong_tin_ca_nhan')->with('success', 'Đổi mật khẩu thành công!');
     }
 
-    public function logoutUser(Request $request)
-    {
-        Auth::logout();
-        return redirect()->route('homepage')->with('success', 'Đăng xuất thành công!');
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Customer Profile Management
+    |--------------------------------------------------------------------------
+    */
 
     public function showProfileUser()
     {
@@ -223,27 +154,7 @@ class AuthController extends Controller
 
     public function updateUser(Request $request)
     {
-        $request->validate([
-            'ho_ten' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'so_dien_thoai' => 'nullable|string|max:15',
-        ]);
-
-        $user = Auth::user();
-        $user->ho_ten = $request->ho_ten;
-        $user->email = $request->email;
-        $user->so_dien_thoai = $request->so_dien_thoai;
-
-        if ($request->hasFile('avatar')) {
-            if ($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
-            }
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $avatarPath;
-        }
-
-        $user->save();
-
+        $this->updateProfile($request);
         return redirect()->route('thong_tin_ca_nhan_user')->with('success', 'Cập nhật thông tin thành công!');
     }
 
@@ -252,51 +163,41 @@ class AuthController extends Controller
         return view('auth.user.doi_mat_khau');
     }
 
-    // ✅ Sửa đầy đủ validate đổi mật khẩu (USER)
     public function changePasswordUser(Request $request)
     {
-        $request->validate([
-            'mat_khau_cu' => 'required|string',
-            'mat_khau_moi' => 'required|string|min:8|max:20|confirmed',
-        ]);
+        $result = $this->handlePasswordChange($request);
 
-        $user = Auth::user();
-
-        try {
-            $currentPassword = Crypt::decrypt($user->mat_khau);
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-            return back()->withErrors(['mat_khau_cu' => 'Không thể xác thực mật khẩu hiện tại.']);
+        if ($result !== true) {
+            return back()->withErrors($result);
         }
-
-        if ($request->mat_khau_cu !== $currentPassword) {
-            return back()->withErrors(['mat_khau_cu' => 'Mật khẩu cũ không chính xác.']);
-        }
-
-        if ($request->mat_khau_moi === $currentPassword) {
-            return back()->withErrors(['mat_khau_moi' => 'Mật khẩu mới không được trùng với mật khẩu cũ.']);
-        }
-        $user->mat_khau = Crypt::encrypt($request->mat_khau_moi);
-        $user->save();
 
         return redirect()->route('thong_tin_ca_nhan_user')->with('success', 'Đổi mật khẩu thành công!');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Google OAuth
+    |--------------------------------------------------------------------------
+    */
 
     public function dieuHuongDenGoogle()
     {
         return Socialite::driver('google')->redirect();
     }
 
+    /**
+     * Handle Google OAuth callback
+     * 
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function xuLyGoogle()
     {
+        /** 
+         * @var \Laravel\Socialite\Two\User $googleUser 
+         * @phpstan-ignore-next-line - stateless() is a valid Socialite method
+         */
         $googleUser = Socialite::driver('google')->stateless()->user();
-
-        $lastUser = NguoiDung::selectRaw("CAST(SUBSTRING(id, 4) AS UNSIGNED) as so_nguoi")
-            ->where('id', 'like', 'KH-%')
-            ->orderBy('so_nguoi', 'desc')
-            ->first();
-
-        $newNumber = $lastUser ? $lastUser->so_nguoi + 1 : 1;
-        $newId = 'KH-' . $newNumber;
+        $newId = $this->generateCustomerId();
 
         $user = NguoiDung::firstOrCreate(
             ['email' => $googleUser->getEmail()],
@@ -318,5 +219,147 @@ class AuthController extends Controller
         }
 
         return redirect()->route('homepage');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helper Methods
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Generate new customer ID
+     */
+    private function generateCustomerId(): string
+    {
+        $lastUser = NguoiDung::selectRaw("CAST(SUBSTRING(id, 4) AS UNSIGNED) as so_nguoi, id")
+            ->where('id', 'like', 'KH-%')
+            ->orderBy('so_nguoi', 'desc')
+            ->first();
+
+        if ($lastUser) {
+            $nextNumber = ($lastUser->so_nguoi + 1);
+            $length = max(3, strlen((string) $nextNumber));
+            return 'KH-' . str_pad($nextNumber, $length, '0', STR_PAD_LEFT);
+        }
+
+        return 'KH-001';
+    }
+
+    /**
+     * Verify user password
+     */
+    private function verifyPassword(NguoiDung $user, string $password): bool
+    {
+        try {
+            $decryptedPassword = Crypt::decrypt($user->mat_khau);
+            return $password === $decryptedPassword;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Redirect user after successful login
+     */
+    private function redirectAfterLogin(NguoiDung $user)
+    {
+        $adminRoles = ['admin', 'Nhân Viên Quản Lý Website', 'Nhân Viên Chăm Sóc Khách Hàng', 'Nhân Viên Thống Kê'];
+
+        if (in_array($user->vai_tro, $adminRoles)) {
+            return redirect()->route('bangdieukhien');
+        }
+
+        return redirect()->route('homepage');
+    }
+
+    /**
+     * Get validation error message
+     */
+    private function getValidationErrorMessage(string $message): string
+    {
+        $errorMap = [
+            'The email has already been taken.' => 'Email đã được sử dụng, vui lòng chọn email khác.',
+            'The email field format is invalid' => 'Email của bạn không hợp lệ.',
+            'The so dien thoai field must be at least 10 characters' => 'Số điện thoại phải có ít nhất 10 số.',
+            'The so dien thoai field must not be greater than 10 characters' => 'Số điện thoại không được dài quá 10 số.',
+            'The mat khau field must be at least 8 characters' => 'Mật khẩu của bạn phải có ít nhất 8 ký tự.',
+            'The mat khau field must not be greater than 20 characters' => 'Mật khẩu của bạn không được vượt quá 20 ký tự.',
+        ];
+
+        foreach ($errorMap as $key => $value) {
+            if (Str::contains($message, $key)) {
+                return $value;
+            }
+        }
+
+        return 'Có lỗi xảy ra, vui lòng thử lại!';
+    }
+
+    /**
+     * Update user profile
+     * 
+     * @param Request $request
+     * @return void
+     */
+    private function updateProfile(Request $request): void
+    {
+        $request->validate([
+            'ho_ten' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'so_dien_thoai' => 'nullable|string|max:15',
+        ]);
+
+        /** @var NguoiDung $user */
+        $user = Auth::user();
+        $user->ho_ten = $request->ho_ten;
+        $user->email = $request->email;
+        $user->so_dien_thoai = $request->so_dien_thoai;
+
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $avatarPath;
+        }
+
+        $user->save();
+    }
+
+    /**
+     * Handle password change
+     * 
+     * @param Request $request
+     * @return true|array Returns true on success, error array on failure
+     */
+    private function handlePasswordChange(Request $request)
+    {
+        $request->validate([
+            'mat_khau_cu' => 'required|string',
+            'mat_khau_moi' => 'required|string|min:8|max:20|confirmed',
+        ]);
+
+        /** @var NguoiDung $user */
+        $user = Auth::user();
+
+        try {
+            $currentPassword = Crypt::decrypt($user->mat_khau);
+        } catch (\Exception $e) {
+            return ['mat_khau_cu' => 'Không thể xác thực mật khẩu hiện tại.'];
+        }
+
+        if ($request->mat_khau_cu !== $currentPassword) {
+            return ['mat_khau_cu' => 'Mật khẩu cũ không chính xác.'];
+        }
+
+        if ($request->mat_khau_moi === $currentPassword) {
+            return ['mat_khau_moi' => 'Mật khẩu mới không được trùng với mật khẩu cũ.'];
+        }
+
+        $user->mat_khau = Crypt::encrypt($request->mat_khau_moi);
+        $user->save();
+
+        return true;
     }
 }

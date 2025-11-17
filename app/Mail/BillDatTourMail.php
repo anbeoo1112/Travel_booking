@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -80,7 +81,7 @@ class BillDatTourMail extends Mailable
                 ]);
 
             return $vietQrUrl;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('QR URL generation failed: ' . $e->getMessage());
             return null;
         }

@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers;
 
 use Exception;
-use App\Http\Controllers\Controller;
-
 use App\Models\DatTour;
 use App\Models\Tour;
 use App\Models\NguoiDung;

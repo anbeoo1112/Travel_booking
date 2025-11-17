@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -64,7 +65,7 @@ class SendInvoiceJob implements ShouldQueue
                 'booking_id' => $this->bookingId,
                 'email' => $booking->email,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('SendInvoiceJob: Failed to send invoice email', [
                 'booking_id' => $this->bookingId,
                 'error' => $e->getMessage(),

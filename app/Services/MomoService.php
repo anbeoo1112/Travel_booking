@@ -2,19 +2,46 @@
 
 namespace App\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class MomoService
 {
+    /**
+     * @var string
+     */
     protected $endpoint;
+
+    /**
+     * @var string
+     */
     protected $partnerCode;
+
+    /**
+     * @var string
+     */
     protected $accessKey;
+
+    /**
+     * @var string
+     */
     protected $secretKey;
+
+    /**
+     * @var string
+     */
     protected $notifyUrl;
+
+    /**
+     * @var string
+     */
     protected $returnUrl;
 
+    /**
+     * Initialize MomoService with config values
+     */
     public function __construct()
     {
         $this->endpoint = config('services.momo.endpoint');
@@ -25,6 +52,14 @@ class MomoService
         $this->returnUrl = config('services.momo.return_url');
     }
 
+    /**
+     * Create payment request to MoMo
+     *
+     * @param string $orderId
+     * @param int|float $amount
+     * @param string $orderInfo
+     * @return array
+     */
     public function createPayment($orderId, $amount, $orderInfo)
     {
         $requestId = (string) Str::uuid();
@@ -77,7 +112,7 @@ class MomoService
             ]);
 
             return $result;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('MoMo Payment Request Failed', [
                 'orderId' => $orderId,
                 'error' => $e->getMessage(),
@@ -90,6 +125,12 @@ class MomoService
         }
     }
 
+    /**
+     * Verify payment signature from MoMo
+     *
+     * @param array $data
+     * @return bool
+     */
     public function verifyPayment($data)
     {
         // Kiểm tra các field bắt buộc theo MoMo API v3
