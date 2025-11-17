@@ -4,6 +4,7 @@
     overflow: hidden;
     border-radius: 1rem;
     background: hsl(var(--b3));
+    position: relative;
 }
 
 .gallery-image img {
@@ -17,11 +18,26 @@
     transform: scale(1.05);
 }
 
+/* Add overlay effect on hover */
+.gallery-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.3s ease;
+    pointer-events: none;
+}
+
+.gallery-image:hover::after {
+    background: rgba(0, 0, 0, 0.08);
+}
+
 /* Tour card image aspect ratio */
 .tour-card-image {
     aspect-ratio: 4 / 3;
     overflow: hidden;
     background: hsl(var(--b3));
+    position: relative;
 }
 
 .tour-card-image img {
@@ -35,6 +51,20 @@
     transform: scale(1.08);
 }
 
+/* Add overlay effect on hover */
+.tour-card-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.3s ease;
+    pointer-events: none;
+}
+
+.tour-card-image:hover::after {
+    background: rgba(0, 0, 0, 0.1);
+}
+
 /* Featured tour image */
 .featured-tour-image {
     aspect-ratio: 4 / 3;
@@ -42,6 +72,7 @@
     overflow: hidden;
     border-radius: 0.5rem;
     background: hsl(var(--b3));
+    position: relative;
 }
 
 .featured-tour-image img {
@@ -55,12 +86,28 @@
     transform: scale(1.08);
 }
 
+/* Add overlay effect on hover */
+.featured-tour-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.3s ease;
+    pointer-events: none;
+}
+
+.featured-tour-image:hover::after {
+    background: rgba(0, 0, 0, 0.1);
+}
+
 /* Small tour thumbnail */
 .tour-thumbnail {
     aspect-ratio: 1 / 1;
     overflow: hidden;
     border-radius: 0.75rem;
     background: hsl(var(--b3));
+    position: relative;
+    flex-shrink: 0;
 }
 
 .tour-thumbnail img {
@@ -72,6 +119,20 @@
 
 .tour-thumbnail img:hover {
     transform: scale(1.05);
+}
+
+/* Add subtle overlay */
+.tour-thumbnail::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.2s ease;
+    pointer-events: none;
+}
+
+.tour-thumbnail:hover::after {
+    background: rgba(0, 0, 0, 0.05);
 }
 
 /* ===== DATE INPUT STYLING FOR DAISYUI ===== */
