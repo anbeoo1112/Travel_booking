@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\TrangTinTuc;
 use App\Models\HinhAnhTour;
@@ -14,6 +16,6 @@ class HomeController extends Controller
         $tours = Tour::with('hinhAnhTours')->get();
         $trangTinTucs = TrangTinTuc::get()->take(3);
 
-        return view('user.homepage', compact('tours','trangTinTucs'));
+        return view('user.homepage', compact('tours', 'trangTinTucs'));
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\LoaiTour;
 use Illuminate\Http\Request;
@@ -26,7 +28,7 @@ class LoaiTourController extends Controller
 
         $data = $request->all();
         LoaiTour::create($data);
-        
+
         return redirect()->route('quanlyloaitour')->with('success', 'Thêm loại tour thành công!');
     }
 
@@ -40,7 +42,7 @@ class LoaiTourController extends Controller
         $loaiTour->ten_loaitour = $request->ten_loaitour;
 
         $loaiTour->save();
-    
+
         return redirect()->route('quanlyloaitour')->with('success', 'Cập nhật loại tour thành công!');
     }
 
@@ -53,8 +55,8 @@ class LoaiTourController extends Controller
             return redirect()->route('quanlyloaitour')->with('error', 'Không thể xóa vì loại tour đang được sử dụng!');
         }
 
-        $loaiTour->delete(); 
-        
-        return redirect()->route('quanlyloaitour')->with('success', 'Xóa loại tour thành công!');   
+        $loaiTour->delete();
+
+        return redirect()->route('quanlyloaitour')->with('success', 'Xóa loại tour thành công!');
     }
 }
