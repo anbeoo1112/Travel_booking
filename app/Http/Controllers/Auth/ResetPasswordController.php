@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\NguoiDung;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Http\Controllers\Controller;
 
-class AuthResetController extends Controller
+class ResetPasswordController extends Controller
 {
     public function create(Request $request, $token = null)
     {

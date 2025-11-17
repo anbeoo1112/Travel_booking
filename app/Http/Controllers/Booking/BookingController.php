@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Booking;
 
 use Exception;
 use App\Models\DatTour;
@@ -13,8 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Controller;
 
-class DatTourController extends Controller
+class BookingController extends Controller
 {
     // Hiển thị danh sách đặt tour và tìm kiếm
     public function index(Request $request)

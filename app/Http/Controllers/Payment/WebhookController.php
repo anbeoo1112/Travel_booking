@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Payment;
 
 use Exception;
 use Illuminate\Http\Request;
@@ -12,8 +12,9 @@ use App\Models\HoaDonDatTour;
 use App\Jobs\SendInvoiceJob;
 use App\Notifications\BookingPaidAdminNotification;
 use App\Services\PayOSService;
+use App\Http\Controllers\Controller;
 
-class PaymentWebhookController extends Controller
+class WebhookController extends Controller
 {
     /**
      * Xử lý webhook từ PayOS

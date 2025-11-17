@@ -18,14 +18,20 @@ use App\Http\Controllers\Admin\ThongKeController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\TourDuLichController;
 use App\Http\Controllers\User\TinTucController;
-use App\Http\Controllers\User\DatTourController;
 
-// Auth & Other Controllers
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AuthForgotController;
-use App\Http\Controllers\AuthResetController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\EmailController;
+// Auth Controllers
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+
+// Booking Controllers
+use App\Http\Controllers\Booking\BookingController;
+
+// Payment Controllers
+use App\Http\Controllers\Payment\PaymentController;
+
+// Common Controllers
+use App\Http\Controllers\Common\EmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,10 +49,10 @@ Route::post('/login', [AuthController::class, 'login']);
 
 // Password Reset
 Route::middleware('guest')->group(function () {
-    Route::get('/forgot-password', [AuthForgotController::class, 'create'])->name('password.request');
-    Route::post('/forgot-password', [AuthForgotController::class, 'store'])->middleware('throttle:5,1')->name('password.email');
-    Route::get('/reset-password/{token}', [AuthResetController::class, 'create'])->name('password.reset');
-    Route::post('/reset-password', [AuthResetController::class, 'store'])->middleware('throttle:5,1')->name('password.update');
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'store'])->middleware('throttle:5,1')->name('password.email');
+    Route::get('/reset-password/{token}', [ResetPasswordController::class, 'create'])->name('password.reset');
+    Route::post('/reset-password', [ResetPasswordController::class, 'store'])->middleware('throttle:5,1')->name('password.update');
 });
 
 // Logout
@@ -128,9 +134,9 @@ Route::group(['middleware' => ['auth', 'role:admin|Nhân Viên Quản Lý Websit
     Route::get('/quanlyhinhanhtour', [HinhAnhTourController::class, 'index'])->name('quanlyhinhanhtour');
 
     // Booking Management
-    Route::get('/quanlydattour', [DatTourController::class, 'index'])->name('quanlydattour');
-    Route::patch('/quanlydattour/{id}/xac-nhan', [DatTourController::class, 'xacNhan'])->name('xac_nhan_dat_tour');
-    Route::patch('/quanlydattour/{id}/huy', [DatTourController::class, 'huy'])->name('huy_dat_tour');
+    Route::get('/quanlydattour', [BookingController::class, 'index'])->name('quanlydattour');
+    Route::patch('/quanlydattour/{id}/xac-nhan', [BookingController::class, 'xacNhan'])->name('xac_nhan_dat_tour');
+    Route::patch('/quanlydattour/{id}/huy', [BookingController::class, 'huy'])->name('huy_dat_tour');
 
     // Invoice Management
     Route::get('/hoadon', [HoaDonController::class, 'index'])->name('hoadondattour');
@@ -186,8 +192,8 @@ Route::group(['middleware' => ['auth', 'role:admin|Nhân Viên Quản Lý Websit
 
 Route::group(['middleware' => ['auth', 'role:Khách Hàng']], function () {
     // Booking History
-    Route::get('/lich-su-dat-tour', [DatTourController::class, 'indexUser'])->name('lichSuDatTour');
-    Route::post('/huy-dat-tour/{id}', [DatTourController::class, 'huyUser'])->name('huyDatTour');
+    Route::get('/lich-su-dat-tour', [BookingController::class, 'indexUser'])->name('lichSuDatTour');
+    Route::post('/huy-dat-tour/{id}', [BookingController::class, 'huyUser'])->name('huyDatTour');
 
     // Customer Profile
     Route::get('/thong-tin-ca-nhan-user', [AuthController::class, 'showProfileUser'])->name('thong_tin_ca_nhan_user');
@@ -197,6 +203,6 @@ Route::group(['middleware' => ['auth', 'role:Khách Hàng']], function () {
     Route::post('/doi-mat-khau-user', [AuthController::class, 'changePasswordUser']);
 
     // Booking & Payment
-    Route::post('/dattour', [DatTourController::class, 'store'])->name('datTour');
+    Route::post('/dattour', [BookingController::class, 'store'])->name('datTour');
     Route::post('/momo/pay', [PaymentController::class, 'createMomoPayment'])->name('momo.pay');
 });

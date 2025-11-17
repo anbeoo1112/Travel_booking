@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Common;
 
 use App\Mail\phanHoiGopY;
 use App\Models\GopY;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Controller;
 
 class EmailController extends Controller
 {

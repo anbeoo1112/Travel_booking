@@ -21,24 +21,28 @@
             $navLinks = [
                 [
                     'label' => 'Trang chủ',
+                    'label_key' => 'nav_home',
                     'route' => 'homepage',
                     'href' => route('homepage'),
                     'active' => request()->routeIs('homepage'),
                 ],
                 [
                     'label' => 'Tour du lịch',
+                    'label_key' => 'nav_tours',
                     'route' => 'tourDuLich',
                     'href' => route('tourDuLich'),
                     'active' => request()->routeIs('tourDuLich') || request()->routeIs('showTourDuLich'),
                 ],
                 [
                     'label' => 'Tin tức',
+                    'label_key' => 'nav_news',
                     'route' => 'tintuc',
                     'href' => route('tintuc'),
                     'active' => request()->routeIs('tintuc') || request()->routeIs('showTinTuc'),
                 ],
                 [
                     'label' => 'Về chúng tôi',
+                    'label_key' => 'nav_about',
                     'route' => 'aboutus',
                     'href' => route('aboutus'),
                     'active' => request()->routeIs('aboutus'),
@@ -49,7 +53,7 @@
         <header class="sticky top-0 z-50 border-b border-base-200 bg-base-100/90 backdrop-blur supports-[backdrop-filter]:bg-base-100/80">
             <div class="container flex h-20 items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <button type="button" class="btn btn-ghost btn-sm lg:hidden" @click="mobileOpen = !mobileOpen" aria-label="Mở menu">
+                    <button type="button" class="btn btn-ghost btn-sm lg:hidden" @click="mobileOpen = !mobileOpen" :aria-label="$store.uiTheme.t('close_menu')">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
@@ -61,7 +65,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 21V3m0 0L3 9m9-6 9 6" />
                             </svg>
                         </span>
-                        <span class="hidden sm:inline">Hanoitourist</span>
+                        <span class="hidden sm:inline" x-text="$store.uiTheme.t('company_name')">Hanoitourist</span>
                     </a>
                 </div>
 
@@ -74,6 +78,7 @@
                                 'text-primary bg-primary/10' => $link['active'],
                                 'text-base-content/70 hover:text-primary hover:bg-primary/10' => ! $link['active'],
                             ])
+                            x-text="$store.uiTheme.t('{{ $link['label_key'] }}')"
                         >
                             {{ $link['label'] }}
                         </a>
@@ -95,8 +100,21 @@
                         </ul>
                     </div>
 
+                    <div class="dropdown dropdown-end hidden sm:block" x-data="{ open: false }">
+                        <label tabindex="0" class="btn btn-sm btn-ghost gap-2 text-sm" @click="open = !open">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621c0-.126.075-.233.194-.287.889-.395 1.951-.64 3.056-.64 1.237 0 2.429.18 3.556.502.985.302 1.921.808 2.773 1.454.339.279.694.425 1.077.425.383 0 .738-.146 1.077-.425.852-.646 1.788-1.152 2.773-1.454 1.126-.322 2.32-.502 3.556-.502 1.105 0 2.167.245 3.056.64.119.054.194.161.194.287V3.75a.75.75 0 00-.75-.75H21a.75.75 0 00-.75.75v.405c-.375 0-.75-.045-1.125-.119-.266-.045-.532-.091-.798-.134-.265-.042-.53-.084-.796-.084-.266 0-.53.042-.796.084-.266.043-.532.089-.798.134-.375.074-.75.119-1.125.119v-.405a.75.75 0 00-.75-.75H4.5a.75.75 0 00-.75.75v15a.75.75 0 00.75.75h15a.75.75 0 00.75-.75V6.375a.75.75 0 00-.75-.75h-.75" />
+                            </svg>
+                            <span class="hidden xl:inline" x-text="$store.uiTheme.t('language')">Ngôn ngữ</span>
+                        </label>
+                        <ul tabindex="-1" class="menu dropdown-content z-[1] mt-3 w-48 rounded-xl bg-base-100 p-2 shadow-lg">
+                            <li><button type="button" @click="$store.uiTheme.setLanguage('vi')" :class="{ 'active': $store.uiTheme.language === 'vi' }">Tiếng Việt</button></li>
+                            <li><button type="button" @click="$store.uiTheme.setLanguage('en')" :class="{ 'active': $store.uiTheme.language === 'en' }">English</button></li>
+                        </ul>
+                    </div>
+
                     <button type="button" class="btn btn-sm btn-ghost" @click="$store.uiTheme.toggleDark()" :aria-pressed="$store.uiTheme.dark">
-                        <span class="sr-only">Đổi chế độ sáng tối</span>
+                        <span class="sr-only" x-text="$store.uiTheme.t('toggle_dark_mode')">Đổi chế độ sáng tối</span>
                         <svg x-show="!$store.uiTheme.dark" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5m0 15V21m9-9h-1.5M4.5 12H3m15.364 6.364l-1.06-1.06M7.697 7.697 6.636 6.636m0 10.728 1.06-1.06m10.728-10.728-1.06 1.06M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />
                         </svg>
@@ -106,7 +124,7 @@
                     </button>
 
                     <a href="{{ route('tourDuLich') }}" class="hidden md:inline-flex">
-                        <x-ui.button variant="primary" size="sm">Đặt ngay</x-ui.button>
+                        <x-ui.button variant="primary" size="sm" x-text="$store.uiTheme.t('book_now')">Đặt ngay</x-ui.button>
                     </a>
 
                     @auth
@@ -122,22 +140,22 @@
                                     <div class="text-xs text-base-content/60">{{ Auth::user()->email }}</div>
                                 </li>
                                 <li><hr class="my-1 border-base-200"></li>
-                                <li><a href="{{ route('lichSuDatTour') }}">Lịch sử đặt tour</a></li>
-                                <li><a href="{{ route('thong_tin_ca_nhan_user') }}">Thông tin cá nhân</a></li>
+                                <li><a href="{{ route('lichSuDatTour') }}" x-text="$store.uiTheme.t('booking_history')">Lịch sử đặt tour</a></li>
+                                <li><a href="{{ route('thong_tin_ca_nhan_user') }}" x-text="$store.uiTheme.t('personal_info')">Thông tin cá nhân</a></li>
                                 <li>
                                     <form method="POST" action="{{ route('logoutUser') }}">
                                         @csrf
-                                        <button type="submit" class="justify-start">Đăng xuất</button>
+                                        <button type="submit" class="justify-start" x-text="$store.uiTheme.t('logout')">Đăng xuất</button>
                                     </form>
                                 </li>
                             </ul>
                         </div>
                     @else
                         <a href="{{ route('login') }}" class="hidden md:inline-flex">
-                            <x-ui.button variant="ghost" size="sm">Đăng nhập</x-ui.button>
+                            <x-ui.button variant="ghost" size="sm" x-text="$store.uiTheme.t('login')">Đăng nhập</x-ui.button>
                         </a>
                         <a href="{{ route('register') }}" class="hidden md:inline-flex">
-                            <x-ui.button variant="secondary" size="sm">Đăng ký</x-ui.button>
+                            <x-ui.button variant="secondary" size="sm" x-text="$store.uiTheme.t('register')">Đăng ký</x-ui.button>
                         </a>
                     @endauth
                 </div>
@@ -153,17 +171,17 @@
                 <div class="fixed inset-y-0 left-0 z-50 w-80 max-w-full overflow-y-auto border-r border-base-200 bg-base-100 p-6" x-transition.duration.300ms>
                     <div class="flex items-center justify-between">
                         <div>
-                            <div class="text-sm font-semibold text-primary">Hanoitourist</div>
-                            <div class="text-xs text-base-content/60">Trải nghiệm du lịch cảm hứng nhiệt đới</div>
+                            <div class="text-sm font-semibold text-primary" x-text="$store.uiTheme.t('company_name')">Hanoitourist</div>
+                            <div class="text-xs text-base-content/60" x-text="$store.uiTheme.t('company_tagline')">Trải nghiệm du lịch cảm hứng nhiệt đới</div>
                         </div>
-                        <button type="button" class="btn btn-ghost btn-sm" aria-label="Đóng menu" @click="mobileOpen = false">
+                        <button type="button" class="btn btn-ghost btn-sm" :aria-label="$store.uiTheme.t('close_menu')" @click="mobileOpen = false">
                             ✕
                         </button>
                     </div>
                     <nav class="mt-6 space-y-2">
                         @foreach($navLinks as $link)
                             <a href="{{ $link['href'] }}" class="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition @if($link['active']) bg-primary text-primary-content shadow @else hover:bg-base-200/70 @endif">
-                                <span>{{ $link['label'] }}</span>
+                                <span x-text="$store.uiTheme.t('{{ $link['label_key'] }}')">{{ $link['label'] }}</span>
                                 @if($link['active'])
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7" />
@@ -181,27 +199,32 @@
                             <button type="button" class="btn btn-sm" @click="$store.uiTheme.toggleDark()" :class="{ 'btn-active btn-primary text-primary-content': $store.uiTheme.dark }">Dark mode</button>
                         </div>
 
+                        <div class="grid grid-cols-2 gap-2">
+                            <button type="button" class="btn btn-sm" @click="$store.uiTheme.setLanguage('vi')" :class="{ 'btn-active btn-primary text-primary-content': $store.uiTheme.language === 'vi' }">Tiếng Việt</button>
+                            <button type="button" class="btn btn-sm" @click="$store.uiTheme.setLanguage('en')" :class="{ 'btn-active btn-primary text-primary-content': $store.uiTheme.language === 'en' }">English</button>
+                        </div>
+
                         <a href="{{ route('tourDuLich') }}" class="block">
-                            <x-ui.button variant="primary" class="w-full">Đặt tour ngay</x-ui.button>
+                            <x-ui.button variant="primary" class="w-full" x-text="$store.uiTheme.t('book_tour_now')">Đặt tour ngay</x-ui.button>
                         </a>
 
                         @guest
                             <div class="flex gap-2">
                                 <a href="{{ route('login') }}" class="flex-1">
-                                    <x-ui.button variant="ghost" class="w-full">Đăng nhập</x-ui.button>
+                                    <x-ui.button variant="ghost" class="w-full" x-text="$store.uiTheme.t('login')">Đăng nhập</x-ui.button>
                                 </a>
                                 <a href="{{ route('register') }}" class="flex-1">
-                                    <x-ui.button variant="secondary" class="w-full">Đăng ký</x-ui.button>
+                                    <x-ui.button variant="secondary" class="w-full" x-text="$store.uiTheme.t('register')">Đăng ký</x-ui.button>
                                 </a>
                             </div>
                         @else
                             <div class="space-y-2 text-sm text-base-content/80">
                                 <div class="font-semibold text-base-content">{{ Auth::user()->ho_ten }}</div>
-                                <a href="{{ route('lichSuDatTour') }}" class="block rounded-lg bg-base-200/70 px-4 py-2">Lịch sử đặt tour</a>
-                                <a href="{{ route('thong_tin_ca_nhan_user') }}" class="block rounded-lg bg-base-200/70 px-4 py-2">Thông tin cá nhân</a>
+                                <a href="{{ route('lichSuDatTour') }}" class="block rounded-lg bg-base-200/70 px-4 py-2" x-text="$store.uiTheme.t('booking_history')">Lịch sử đặt tour</a>
+                                <a href="{{ route('thong_tin_ca_nhan_user') }}" class="block rounded-lg bg-base-200/70 px-4 py-2" x-text="$store.uiTheme.t('personal_info')">Thông tin cá nhân</a>
                                 <form method="POST" action="{{ route('logoutUser') }}">
                                     @csrf
-                                    <button type="submit" class="btn btn-ghost btn-sm w-full justify-start">Đăng xuất</button>
+                                    <button type="submit" class="btn btn-ghost btn-sm w-full justify-start" x-text="$store.uiTheme.t('logout')">Đăng xuất</button>
                                 </form>
                             </div>
                         @endguest
@@ -299,8 +322,8 @@
                 </div>
 
                 <div class="space-y-3">
-                    <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/80">Đăng ký nhận tin</h3>
-                    <p class="text-sm text-base-content/70">Nhận ưu đãi tour mới nhất và gợi ý hành trình dành riêng cho bạn.</p>
+                    <h3 class="text-sm font-semibold uppercase tracking-wide text-base-content/80" x-text="$store.uiTheme.t('newsletter_signup')">Đăng ký nhận tin</h3>
+                    <p class="text-sm text-base-content/70" x-text="$store.uiTheme.t('latest_offers')">Nhận ưu đãi tour mới nhất và gợi ý hành trình dành riêng cho bạn.</p>
                     <form class="space-y-3">
                         <label class="input input-bordered input-sm flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-60" viewBox="0 0 20 20" fill="currentColor">
@@ -314,7 +337,7 @@
             </div>
 
             <div class="mt-8 border-t border-base-200 pt-6 text-center text-xs text-base-content/60">
-                © {{ now()->year }} Hanoitourist. Giữ tất cả quyền.
+                © {{ now()->year }} Hanoitourist. <span x-text="$store.uiTheme.t('all_rights_reserved')">Giữ tất cả quyền</span>.
             </div>
         </footer>
     </div>

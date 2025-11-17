@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Exception;
 use App\Models\NguoiDung;
@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
 use Illuminate\Database\QueryException;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {

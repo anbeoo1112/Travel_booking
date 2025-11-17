@@ -1,7 +1,9 @@
 @props([
     'icon' => null,
     'title' => 'Không có dữ liệu',
+    'titleKey' => null,
     'description' => 'Hiện chưa có nội dung nào để hiển thị.',
+    'descriptionKey' => null,
 ])
 
 <div {{ $attributes->merge(['class' => 'flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-base-200 bg-base-100/80 px-6 py-12 text-center']) }}>
@@ -15,8 +17,18 @@
         @endif
     </div>
     <div class="space-y-1">
-        <h3 class="text-lg font-semibold text-base-content">{{ $title }}</h3>
-        <p class="text-sm text-base-content/70">{{ $description }}</p>
+        <h3
+            class="text-lg font-semibold text-base-content"
+            @if($titleKey)
+                x-text="$store.uiTheme.t('{{ $titleKey }}')"
+            @endif
+        >{{ $title }}</h3>
+        <p
+            class="text-sm text-base-content/70"
+            @if($descriptionKey)
+                x-text="$store.uiTheme.t('{{ $descriptionKey }}')"
+            @endif
+        >{{ $description }}</p>
     </div>
     {{ $slot }}
 </div>

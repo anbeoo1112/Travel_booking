@@ -4,7 +4,10 @@
 
 @props([
     'label' => null,
+    'labelKey' => null,
     'hint' => null,
+    'hintKey' => null,
+    'placeholderKey' => null,
     'error' => null,
     'prefixIcon' => null,
     'suffixIcon' => null,
@@ -34,9 +37,14 @@
 @endphp
 
 <div class="form-control w-full">
-    @if($label)
+    @if($label || $labelKey)
         <label for="{{ $inputId }}" class="label">
-            <span class="label-text font-medium text-base-content">{{ $label }}</span>
+            <span
+                class="label-text font-medium text-base-content"
+                @if($labelKey)
+                    x-text="$store.uiTheme.t('{{ $labelKey }}')"
+                @endif
+            >{{ $label }}</span>
         </label>
     @endif
 
@@ -53,6 +61,9 @@
                 'class' => $inputClasses,
                 'aria-describedby' => $describedBy ?: null,
             ]) }}
+            @if($placeholderKey)
+                x-bind:placeholder="$store.uiTheme.t('{{ $placeholderKey }}')"
+            @endif
             @if($error) aria-invalid="true" @endif
         >
 
@@ -63,8 +74,14 @@
         @endif
     </div>
 
-    @if($hint)
-        <p id="{{ $inputId }}-hint" class="mt-2 text-sm text-base-content/70">{{ $hint }}</p>
+    @if($hint || $hintKey)
+        <p
+            id="{{ $inputId }}-hint"
+            class="mt-2 text-sm text-base-content/70"
+            @if($hintKey)
+                x-text="$store.uiTheme.t('{{ $hintKey }}')"
+            @endif
+        >{{ $hint }}</p>
     @endif
 
     @if($error)

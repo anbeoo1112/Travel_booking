@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use App\Http\Controllers\Controller;
 
-class AuthForgotController extends Controller
+class ForgotPasswordController extends Controller
 {
     public function create()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Payment;
 
 use Exception;
 use App\Models\DatTour;
@@ -12,6 +12,7 @@ use App\Services\MomoService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
