@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        color-scheme: light;
+    }
+
+    html {
+        font-family: theme('fontFamily.sans');
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply min-h-screen bg-base-100 text-base-content antialiased;
+    }
+
+    ::selection {
+        @apply bg-primary text-primary-content;
+    }
+
+    ::-moz-selection {
+        @apply bg-primary text-primary-content;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer base {
+    html.dark {
+        color-scheme: dark;
+    }
+
+    html[data-theme='tropical'] {
+        --surface-color: #ffffff;
+        --muted-color: #475569;
+    }
+
+    html.dark[data-theme='tropical'],
+    html[data-theme='tropical-dark'] {
+        --surface-color: #0B1120;
+        --muted-color: #94A3B8;
+    }
+
+    html.dark {
+        color-scheme: dark;
+    }
+
+    html.dark body,
+    html[data-theme='tropical-dark'] body,
+    html[data-theme='minimal-bw'].dark body,
+    html[data-theme='pastel'].dark body {
+        background-color: hsl(var(--b1));
+        color: hsl(var(--bc));
+    }
+
+    html[data-theme='minimal-bw'] {
+        --surface-color: #ffffff;
+        --muted-color: #6B7280;
+    }
+
+    html.dark[data-theme='minimal-bw'] {
+        --surface-color: #151515;
+        --muted-color: #9CA3AF;
+        --p: 220 15% 88%;
+        --pc: 240 15% 12%;
+        --a: 220 10% 55%;
+        --ac: 220 15% 12%;
+        --n: 210 10% 8%;
+        --nc: 210 15% 88%;
+        --b1: 230 5% 5%;
+        --b2: 230 5% 9%;
+        --b3: 230 6% 12%;
+        --bc: 210 15% 88%;
+    }
+
+    html[data-theme='pastel'] {
+        --surface-color: #ffffff;
+        --muted-color: #64748B;
+    }
+
+    html.dark[data-theme='pastel'] {
+        --surface-color: #171A2B;
+        --muted-color: #9CA3AF;
+        --p: 272 86% 76%;
+        --pc: 240 25% 16%;
+        --a: 156 70% 58%;
+        --ac: 240 25% 16%;
+        --n: 222 47% 13%;
+        --nc: 220 33% 92%;
+        --b1: 240 37% 7%;
+        --b2: 233 33% 11%;
+        --b3: 228 28% 15%;
+        --bc: 220 33% 92%;
+    }
+}

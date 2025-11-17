@@ -1,0 +1,147 @@
+form {
+    background-color: var(--container-color);
+    padding: 20px;
+    border-radius: 10px; /* Bo góc form */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.295); /* Hiệu ứng đổ bóng */
+    max-width: 400px; /* Giới hạn chiều rộng */
+    margin: auto; /* Canh giữa form */
+}
+
+#profile-dropdown.dropdown-menu{
+    background-color: var(--container-color);
+    margin-top: 200px;
+}
+
+#profile-dropdown.dropdown-menu li#lich_su_dat_tour{ 
+    padding:10px;
+}
+
+#profile-dropdown.dropdown-menu li#lich_su_dat_tour a{ 
+    color: var(--title-color);
+}
+
+#profile-dropdown.dropdown-menu li#thong_tin_ca_nhan{ 
+    padding:10px;
+}
+
+#profile-dropdown.dropdown-menu li#thong_tin_ca_nhan a{ 
+    color: var(--title-color);
+}
+
+#profile-dropdown.dropdown-menu li#dang_xuat form{ 
+    padding:10px; 
+    border-radius: 0px
+}
+
+#profile-dropdown.dropdown-menu li#dang_xuat form a{ 
+    color: var(--title-color);
+}
+
+/* Style cho tiêu đề của form */
+.filter__title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    text-align: center; /* Canh giữa tiêu đề */
+    margin-bottom: 20px;
+}
+
+/* Style cho từng nhóm bộ lọc */
+.filter__group {
+    margin-bottom: 20px;
+}
+
+/* Style cho nhãn label */
+label {
+    font-size: 16px;
+    color: var(--text-color);
+    margin-bottom: 5px;
+    display: block; /* Đặt label thành block để canh hàng với input */
+}
+/* Style cho nhóm bộ lọc loại hình du lịch */
+.filter__group label {
+    display: block; /* Đặt label thành block để canh hàng với input */
+    margin-top: 10px; /* Khoảng cách trên các label */
+}
+
+/* Style cho input */
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #4645456c;
+    border-radius: 5px;
+    box-sizing: border-box; /* Đảm bảo padding không ảnh hưởng kích thước */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Hiệu ứng khi focus vào input */
+input[type="text"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none; /* Bỏ viền mặc định khi focus */
+}
+.filter__sidebar{
+    width:100%;
+    background-color: var(--container-color);
+}
+/* Style cho nút Tìm Kiếm */
+#timKiemTourDuLich {
+    background-color: #007bff;
+    color: white;
+    font-size: 18px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    width: 100%; /* Đặt nút rộng 100% */
+    cursor: pointer; /* Con trỏ hình bàn tay khi rê chuột qua */
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Hiệu ứng khi rê chuột vào nút */
+#timKiemTourDuLich:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px); /* Nút nổi lên khi hover */
+}
+
+/* Hiệu ứng khi bấm nút */
+#timKiemTourDuLich:active {
+    background-color: #004085;
+    transform: translateY(0); /* Trả nút về vị trí ban đầu */
+}
+
+.theloai_box{
+    padding: 30px; 
+    color: var(--title-color);
+    margin-bottom:-80px;
+}
+
+.avatar {
+    width: 50px; /* Kích thước chiều rộng */
+    height: 50px; /* Kích thước chiều cao */
+    border-radius: 50%; /* Để hình ảnh thành hình tròn */
+    object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+}
+/* Đặt menu dropdown bên dưới avatar */
+.dropdown-menu {
+display: none; /* Mặc định ẩn */
+position: absolute; /* Đặt vị trí tuyệt đối */
+top: 100%; /* Đưa nó xuống dưới avatar */
+left: 0; /* Đặt sang bên trái */
+background-color: white; /* Màu nền cho menu */
+border: 1px solid #ddd; /* Đường viền cho menu */
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bóng đổ */
+z-index: 1000; /* Đảm bảo menu nằm trên các phần tử khác */
+width: 200px; /* Đặt chiều rộng cho menu, tùy chỉnh theo nhu cầu */
+}
+
+/* Hiển thị menu khi nó được bật */
+.show {
+display: block; /* Hiển thị dropdown */
+}
+
+#thong_tin_ca_nhan.thong_tin_ca_nhan{
+    background: url('../img/background _user.jpg');
+    height:80%;
+}

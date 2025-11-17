@@ -1,0 +1,72 @@
+.carousel {
+    position: relative;
+    max-width: 100%;
+    height: 100%; /* Chiều cao của Carousel */
+    overflow: hidden;
+    margin: auto;
+  }
+
+  .carousel-inner {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: 1920px; /* Chiều rộng 100% cho carousel-inner */
+    height: 100%; /* Chiều cao 100% cho carousel-inner */
+  }
+
+  .carousel-item {
+    min-width: 100%; /* Mỗi item chiếm 100% chiều rộng */
+    display: flex;
+  }
+
+  .carousel-item img {
+    width: 100%;
+    height: 100%; /* Chiều dọc toàn màn hình */
+    object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+  }
+
+  /* Nút điều hướng */
+  .carousel-control-prev, .carousel-control-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0);
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 10px;
+    font-size: 50px;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .carousel-control-prev {
+    left: 10px;
+  }
+
+  .carousel-control-next {
+    right: 10px;
+  }
+
+  /* Chỉ báo (dots) */
+  .carousel-indicators {
+    position: absolute;
+    bottom: 15px; /* Đặt vị trí cách cạnh dưới */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Khoảng cách giữa các dots */
+    z-index: 2; /* Đảm bảo chỉ báo nằm trên ảnh */
+  }
+
+  .carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+  }
+
+  .carousel-indicators .active {
+    background-color: white;
+  }
