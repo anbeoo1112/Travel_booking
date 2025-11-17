@@ -11,6 +11,9 @@
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 
     @vite(['resources/css/styles-admin.css', 'resources/js/styles-admin.js'])
+    
+    <!-- Flatpickr Datepicker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
     <!-- SIDEBAR -->
@@ -134,6 +137,47 @@
         <main>
             @yield('content')
 		</main>
+    </div>
+</div>
+
+<!-- Flatpickr Script -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    // Vietnamese locale for Flatpickr
+    flatpickr.localize({
+        weekdays: {
+            shorthand: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+            longhand: ["Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"]
+        },
+        months: {
+            shorthand: ["Th1", "Th2", "Th3", "Th4", "Th5", "Th6", "Th7", "Th8", "Th9", "Th10", "Th11", "Th12"],
+            longhand: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"]
+        },
+        ordinal: () => "",
+        firstDayOfWeek: 1,
+        rangeSeparator: " đến ",
+        weekAbbreviation: "Tuần",
+        scrollTitle: "Cuộn để thay đổi",
+        toggleTitle: "Nhấn để bật/tắt"
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all date inputs with Flatpickr
+        const dateInputs = document.querySelectorAll('input[type="date"].form-control');
+        dateInputs.forEach(input => {
+            flatpickr(input, {
+                enableTime: false,
+                dateFormat: 'Y-m-d',
+                minDate: new Date(),
+                disableMobile: false,
+                static: false,
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
     </section>
 </body>
 </html>
