@@ -51,12 +51,12 @@
         </div>
     </div>
 
-    <!-- Hóa đơn thanh toán online (MoMo, PayOS) -->
+    <!-- Hóa đơn thanh toán online (MoMo) -->
     <div class="table" style="background-color:rgb(255, 255, 255); padding: 20px; border-radius:30px;">
         <div class="order">
             <div class="head">
                 <h4 style="font-weight:600;">Hóa Đơn Thanh Toán Online</h4>
-                <p class="text-muted"><small>Danh sách thanh toán qua MoMo & PayOS</small></p>
+                <p class="text-muted"><small>Danh sách thanh toán qua MoMo</small></p>
             </div>
             <table class="table table-borderless">
                 <thead>
@@ -80,11 +80,7 @@
                             <td><center>{{ $payment->booking->email }}</center></td>
                             <td><center>{{ number_format($payment->amount, 0, ',', '.') }} VNĐ</center></td>
                             <td><center>
-                                @if($payment->gateway === 'momo')
-                                    <span class="badge bg-pink-500" style="background-color: #d91876;">MoMo</span>
-                                @else
-                                    <span class="badge bg-primary">PayOS</span>
-                                @endif
+                                <span class="badge bg-pink-500" style="background-color: #d91876;">MoMo</span>
                             </center></td>
                             <td><center>{{ $payment->paid_at->format('d/m/Y H:i') }}</center></td>
                             <td><center>

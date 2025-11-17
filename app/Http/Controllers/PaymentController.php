@@ -15,57 +15,6 @@ use Illuminate\Support\Facades\Notification;
 class PaymentController extends Controller
 {
     /**
-     * Hiển thị trang thanh toán PayOS QR
-     * GET /user/bookings/{booking}/pay/payos
-     */
-    public function showPayOS(Request $request, DatTour $booking)
-    {
-        // Kiểm tra quyền sở hữu
-        if ($booking->id_khachhang !== (string) auth()->id()) {
-            abort(403, 'Unauthorized');
-        }
-
-        // Không được thanh toán 2 lần
-        if ($booking->payment_status === 'paid') {
-            return redirect()->route('user.booking.checkout', $booking)
-                ->with('warning', 'Đơn này đã được thanh toán rồi');
-        }
-
-        // Tạo hoặc lấy payment pending
-        $amount = $booking->tour->gia * $booking->so_nguoi;
-        $payment = Payment::where('booking_id', $booking->id)
-            ->where('status', 'pending')
-            ->first();
-
-        if (!$payment) {
-            $payment = Payment::create([
-                'booking_id' => $booking->id,
-                'gateway' => 'payos',
-                'order_code' => (string) Str::uuid(),
-                'amount' => $amount,
-                'currency' => 'VND',
-                'status' => 'pending',
-            ]);
-        }
-
-        return view('user.payment.payos_qr', compact('booking', 'payment'));
-    }
-
-    /**
-     * Hiển thị kết quả thanh toán
-     * GET /payments/result/{payment}
-     */
-    public function result(Request $request, Payment $payment)
-    {
-        // Kiểm tra quyền sở hữu
-        if ($payment->booking->id_khachhang !== (string) auth()->id()) {
-            abort(403, 'Unauthorized');
-        }
-
-        return view('user.payment.result', compact('payment'));
-    }
-
-    /**
      * Tạo yêu cầu thanh toán mới tới Momo.
      */
     public function createMomoPayment(Request $request)

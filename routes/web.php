@@ -19,17 +19,10 @@ use App\Http\Controllers\ThongKeController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\AuthForgotController;
 use App\Http\Controllers\AuthResetController;
-use App\Http\Controllers\PaymentWebhookController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
 
 
 Route::post('/gopy/phanhoi/{id}', [EmailController::class, 'sendEmail'])->name('guiPhanHoi');
-Route::post('/gopy/{id}/send-email', [GopYController::class, 'sendEmail'])->name('gopy.sendemail');
-
-// Webhook PayOS - Không cần authentication
-Route::post('/payments/webhook/payos', [PaymentWebhookController::class, 'payos'])
-    ->name('payments.webhook.payos');
 
 
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
@@ -172,16 +165,6 @@ Route::group(['middleware' => ['auth', 'role:Khách Hàng']], function () {
 
     Route::post('/dattour', [DatTourController::class, 'store'])->middleware('auth')->name('datTour');
 
-    // Checkout & Payment routes
-    Route::get('/user/bookings/{booking}/checkout', [CheckoutController::class, 'show'])
-        ->name('user.booking.checkout');
-
-    Route::get('/user/bookings/{booking}/pay/payos', [PaymentController::class, 'showPayOS'])
-        ->name('user.booking.pay.payos');
-
     Route::post('/momo/pay', [PaymentController::class, 'createMomoPayment'])
         ->name('momo.pay');
-
-    Route::get('/payments/result/{payment}', [PaymentController::class, 'result'])
-        ->name('payment.result');
 });

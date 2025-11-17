@@ -29,7 +29,7 @@ class HoaDonController extends Controller
             ->orderBy('id', 'desc')
             ->get();
 
-        // Lấy danh sách payments (từ thanh toán online: MoMo, PayOS)
+        // Lấy danh sách payments (từ thanh toán online: MoMo)
         $onlinePayments = \App\Models\Payment::with(['booking.tour'])
             ->when($keyword, function ($query) use ($keyword) {
                 return $query->where('order_code', 'LIKE', "%{$keyword}%")

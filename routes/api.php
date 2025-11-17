@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PaymentApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,13 +16,4 @@ use App\Http\Controllers\PaymentApiController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-});
-
-// Payment Status API - Cho phép user check trạng thái thanh toán
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/payments/{booking}/payos/start', [PaymentApiController::class, 'startPayOS'])
-        ->name('api.payments.payos.start');
-
-    Route::get('/payments/{payment}/status', [PaymentApiController::class, 'status'])
-        ->name('api.payments.status');
 });
