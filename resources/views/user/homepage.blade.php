@@ -83,11 +83,11 @@
                 @foreach($featuredTours as $tour)
                     <x-ui.card hover class="flex h-full flex-col gap-4 overflow-hidden p-0">
                         <a href="{{ route('showTourDuLich', $tour->slug) }}" class="block">
-                            <div class="aspect-[4/3] w-full overflow-hidden">
+                            <div class="featured-tour-image">
                                 <img
                                     src="{{ $tour->hinhAnhTours->isNotEmpty() ? asset('storage/' . $tour->hinhAnhTours[0]->url_anh) : asset('frontend/assets/images/logo/logo2.png') }}"
                                     alt="Hình ảnh tour {{ $tour->ten_tour }}"
-                                    class="h-full w-full object-cover transition duration-500 hover:scale-105"
+                                    loading="lazy"
                                 >
                             </div>
                         </a>

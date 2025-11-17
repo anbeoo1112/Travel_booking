@@ -28,6 +28,7 @@ export default defineConfig(({ mode }) => {
         laravel({
             input: ['resources/css/app.css',
                     'resources/css/styles-admin.css',
+                    'resources/css/images.css',
                     'resources/js/app.js',
                     'resources/js/styles-admin.js',
                     'resources/js/addUser-admin.js',

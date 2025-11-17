@@ -47,8 +47,8 @@
                 <div class="space-y-4">
                     @foreach($tours as $tour)
                         <x-ui.card hover class="flex items-center gap-4 p-3">
-                            <div class="h-16 w-16 overflow-hidden rounded-xl">
-                                <img src="{{ $tour->hinhAnhTours->isNotEmpty() ? asset('storage/' . $tour->hinhAnhTours[0]->url_anh) : asset('frontend/assets/images/logo/logo2.png') }}" alt="{{ $tour->ten_tour }}" class="h-full w-full object-cover">
+                            <div class="tour-thumbnail">
+                                <img src="{{ $tour->hinhAnhTours->isNotEmpty() ? asset('storage/' . $tour->hinhAnhTours[0]->url_anh) : asset('frontend/assets/images/logo/logo2.png') }}" alt="{{ $tour->ten_tour }}" loading="lazy">
                             </div>
                             <div class="flex flex-1 flex-col gap-1">
                                 <a href="{{ route('showTourDuLich', $tour->slug) }}" class="text-sm font-semibold text-base-content transition hover:text-primary">{{ $tour->ten_tour }}</a>

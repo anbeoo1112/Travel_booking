@@ -43,8 +43,8 @@
         <section class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
             <div class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 @foreach($galleryImages as $image)
-                    <div class="overflow-hidden rounded-2xl">
-                        <img src="{{ asset('storage/' . $image->url_anh) }}" alt="{{ $image->ten_anh }}" class="h-48 w-full object-cover transition duration-500 hover:scale-105">
+                    <div class="gallery-image">
+                        <img src="{{ asset('storage/' . $image->url_anh) }}" alt="{{ $image->ten_anh }}" loading="lazy">
                     </div>
                 @endforeach
             </div>
@@ -166,8 +166,8 @@
                 @foreach($relatedTours as $item)
                     <x-ui.card hover class="flex h-full flex-col overflow-hidden p-0">
                         <a href="{{ route('showTourDuLich', $item->slug) }}" class="block">
-                            <div class="aspect-[4/3] overflow-hidden">
-                                <img src="{{ $item->hinhAnhTours->isNotEmpty() ? asset('storage/' . $item->hinhAnhTours[0]->url_anh) : asset('frontend/assets/images/logo/logo2.png') }}" alt="{{ $item->ten_tour }}" class="h-full w-full object-cover transition duration-500 hover:scale-105">
+                            <div class="tour-card-image">
+                                <img src="{{ $item->hinhAnhTours->isNotEmpty() ? asset('storage/' . $item->hinhAnhTours[0]->url_anh) : asset('frontend/assets/images/logo/logo2.png') }}" alt="{{ $item->ten_tour }}" loading="lazy">
                             </div>
                         </a>
                         <div class="flex flex-1 flex-col gap-4 px-6 pb-6 pt-5">
@@ -199,42 +199,6 @@
 @endsection
 
 @push('style-alt')
-    <style>
-        /* Styling đẹp cho date input */
-        input[type="date"] {
-            appearance: none;
-            -webkit-appearance: none;
-            position: relative;
-            padding: 0.625rem 0.75rem;
-            font-size: 1rem;
-            font-family: inherit;
-        }
-        
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            cursor: pointer;
-            border-radius: 4px;
-            margin-right: 2px;
-            opacity: 0.6;
-            filter: invert(0.8);
-            transition: all 0.2s ease;
-        }
-        
-        input[type="date"]::-webkit-calendar-picker-indicator:hover {
-            opacity: 1;
-            filter: invert(0.2);
-        }
-        
-        input[type="date"]:focus::-webkit-calendar-picker-indicator {
-            opacity: 1;
-            filter: invert(0.2);
-        }
-        
-        /* Cho Firefox */
-        input[type="date"]::before {
-            content: "📅 ";
-            margin-right: 0.5rem;
-        }
-    </style>
 @endpush
 
 @push('script-alt')
