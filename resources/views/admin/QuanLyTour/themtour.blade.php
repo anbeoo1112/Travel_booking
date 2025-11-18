@@ -1,13 +1,8 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="//cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
-@vite('resources/js/tour-admin.js', 'resources/css/images.css')
+@vite('resources/js/tour-admin.js')
 
 <!-- Nút Thêm -->
-<form action="{{ route('them_tour') }}" method="POST" style="display:inline-block;">
-    <button type="button" class="btn btn-success fs-5" data-bs-toggle="modal" data-bs-target="#addTourModal"><i
-            class='bx bx-plus'></i></button>
-</form>
+<button type="button" class="btn btn-success fs-5" data-bs-toggle="modal" data-bs-target="#addTourModal"><i class='bx bx-plus'></i></button>
 
 <!-- Modal Thêm Tour -->
 <div class="modal fade" id="addTourModal" tabindex="-1" aria-labelledby="addTourModalLabel" aria-hidden="true">

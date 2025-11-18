@@ -1,17 +1,14 @@
-@vite('resources/js/addUser-admin.js')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Nút Thêm -->
-<form action="{{ route('them_hinh_anh_tour') }}" method="POST" style="display:inline-block;">
-    <button type="button" class="btn btn-success fs-5" data-bs-toggle="modal" data-bs-target="#addHinhAnhModal"><i class='bx bx-plus'></i></button>
-</form>
+<!-- Nút Thêm (không trong form) -->
+<button type="button" class="btn btn-success fs-5" data-bs-toggle="modal" data-bs-target="#addHinhAnhModal">
+    <i class='bx bx-plus'></i> Thêm Ảnh
+</button>
 
 <!-- Modal Thêm Hình Ảnh -->
 <div class="modal fade" id="addHinhAnhModal" tabindex="-1" aria-labelledby="addHinhAnhModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content" id="addModalContent">
+        <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title add" id="addHinhAnhModalLabel">Thêm Hình Ảnh</h5>
+                <h5 class="modal-title" id="addHinhAnhModalLabel">Thêm Hình Ảnh</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

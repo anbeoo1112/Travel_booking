@@ -30,11 +30,19 @@
                     @forelse($hoaDonDatTours as $hoaDonDatTour)
                         <tr>
                             <td><center>{{ $hoaDonDatTour->id }}</center></td>
-                            <td><center>{{ $hoaDonDatTour->datTour->id }}</center></td>
-                            <td><center>{{ $hoaDonDatTour->datTour->id_khachhang }}</center></td>
-                            <td><center>{{ $hoaDonDatTour->datTour->ho_ten }}</center></td>
-                            <td><center>{{ $hoaDonDatTour->datTour->email }}</center></td>
-                            <td><center>{{ $hoaDonDatTour->datTour->so_dien_thoai }}</center></td>
+                            @if($hoaDonDatTour->datTour)
+                                <td><center>{{ $hoaDonDatTour->datTour->id }}</center></td>
+                                <td><center>{{ $hoaDonDatTour->datTour->id_khachhang }}</center></td>
+                                <td><center>{{ $hoaDonDatTour->datTour->ho_ten }}</center></td>
+                                <td><center>{{ $hoaDonDatTour->datTour->email }}</center></td>
+                                <td><center>{{ $hoaDonDatTour->datTour->so_dien_thoai }}</center></td>
+                            @else
+                                <td><center>N/A</center></td>
+                                <td><center>N/A</center></td>
+                                <td><center>N/A</center></td>
+                                <td><center>N/A</center></td>
+                                <td><center>N/A</center></td>
+                            @endif
                             <td><center>{{ $hoaDonDatTour->trang_thai }}</center></td>
                             <td>
                                 @include('admin.QuanLyHoaDon.xemhoadon', ['hoaDonDatTour' => $hoaDonDatTour])
@@ -75,9 +83,15 @@
                     @forelse($onlinePayments as $payment)
                         <tr>
                             <td><center><code>{{ $payment->order_code }}</code></center></td>
-                            <td><center>{{ $payment->booking->id }}</center></td>
-                            <td><center>{{ $payment->booking->ho_ten }}</center></td>
-                            <td><center>{{ $payment->booking->email }}</center></td>
+                            @if($payment->booking)
+                                <td><center>{{ $payment->booking->id }}</center></td>
+                                <td><center>{{ $payment->booking->ho_ten }}</center></td>
+                                <td><center>{{ $payment->booking->email }}</center></td>
+                            @else
+                                <td><center>N/A</center></td>
+                                <td><center>N/A</center></td>
+                                <td><center>N/A</center></td>
+                            @endif
                             <td><center>{{ number_format($payment->amount, 0, ',', '.') }} VNĐ</center></td>
                             <td><center>
                                 <span class="badge bg-pink-500" style="background-color: #d91876;">MoMo</span>

@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 @vite(['resources/js/xemChiTietGopY.js'])
 
 <button type="button" class="btn btn-warning fs-5" data-bs-toggle="modal" data-bs-target="#xemChiTietGopYModal" data-ho-ten="{{ $gopY->ho_ten }}" data-so-dien-thoai="{{ $gopY->so_dien_thoai }}" data-email="{{ $gopY->email }}" data-noi-dung="{{ $gopY->noidung_gopy }}">

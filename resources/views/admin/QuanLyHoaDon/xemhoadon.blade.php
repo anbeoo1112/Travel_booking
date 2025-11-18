@@ -43,8 +43,13 @@
                             </div>
                             <div class="col-md-6">
                                 <ul style="margin-left: 60px;">
-                                    <li><strong>Họ tên:</strong> {{ $hoaDonDatTour->datTour->ho_ten }}</li>
-                                    <li><strong>Email:</strong> {{ $hoaDonDatTour->datTour->email }}</li>
+                                    @if($hoaDonDatTour->datTour)
+                                        <li><strong>Họ tên:</strong> {{ $hoaDonDatTour->datTour->ho_ten }}</li>
+                                        <li><strong>Email:</strong> {{ $hoaDonDatTour->datTour->email }}</li>
+                                    @else
+                                        <li><strong>Họ tên:</strong> N/A</li>
+                                        <li><strong>Email:</strong> N/A</li>
+                                    @endif
                                 </ul>
                             </div>
                         </div>
@@ -149,8 +154,13 @@
                                 </script>
 
                                 <p><strong>Người Phụ Trách</strong></p>
-                                <p class="name">{{ mb_strtoupper(last(explode(' ', $hoaDonDatTour->datTour->nguoiDung->ho_ten)), 'UTF-8') }}</p>
-                                <p class="fullname">{{ $hoaDonDatTour->datTour->nguoiDung->ho_ten }}</p>
+                                @if($hoaDonDatTour->datTour && $hoaDonDatTour->datTour->nguoiDung)
+                                    <p class="name">{{ mb_strtoupper(last(explode(' ', $hoaDonDatTour->datTour->nguoiDung->ho_ten)), 'UTF-8') }}</p>
+                                    <p class="fullname">{{ $hoaDonDatTour->datTour->nguoiDung->ho_ten }}</p>
+                                @else
+                                    <p class="name">N/A</p>
+                                    <p class="fullname">N/A</p>
+                                @endif
                             </div>
                         </div>
                     </div>
